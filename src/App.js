@@ -203,102 +203,94 @@ const QuizGame = () => {
       : "Keep learning! You can do better next time! 📚";
 
   return (
-    <>
-      <Helmet>
-        <title>IQ Quiz Game</title>
-        <meta property="og:title" content="Test your IQ with this fun quiz!" />
-        <meta property="og:description" content="Play the IQ quiz and see how smart you are." />
-        <meta property="og:image" content="URL to your image" /> {/* Replace with your image URL */}
-        <meta property="og:url" content="Your Render URL" /> {/* Replace with your Render URL */}
-        <meta property="og:type" content="website" />
-      </Helmet>
-      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white p-5">
-        <div className="w-full max-w-2xl bg-gray-800 p-6 rounded-xl shadow-lg">
-          {!showResult ? (
-            <>
-              <h1 className="text-2xl font-bold text-center mb-4">
-                Let’s test your IQ! 🤔
-                <br /> How many questions do you think you will answer correctly?
-              </h1>
-              <h2 className="text-xl font-semibold mb-4">{questions[currentQuestion].question}</h2>
-              <div className="flex justify-center mb-4">
-                <CircularProgress
-                  variant="determinate"
-                  value={(timeLeft / 10) * 100} // Calculate progress percentage
-                  size={80}
-                  thickness={5}
-                  style={{ color: "lightblue" }}
-                >
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      fontSize: "1.2rem",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {timeLeft}
-                  </motion.span>
-                </CircularProgress>
-              </div>
-              <div className="grid gap-3">
-                {questions[currentQuestion].options.map((option, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={() => handleAnswerClick(option)}
-                    disabled={!!selectedAnswer}
-                    className={`p-3 w-full rounded-lg text-lg font-medium transition-all ${selectedAnswer
-                      ? option === questions[currentQuestion].answer
-                        ? "bg-green-600"
-                        : "bg-red-600"
-                      : "bg-blue-500 hover:bg-blue-700"
-                      }`}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    {option}
-                  </motion.button>
-                ))}
-              </div>
-              {selectedAnswer && (
-                <div className="mt-4 flex items-center gap-2 text-lg">
-                  {selectedAnswer === questions[currentQuestion].answer ? (
-                    <FaCheckCircle className="text-green-500" size={24} />
-                  ) : (
-                    <FaTimesCircle className="text-red-500" size={24} />
-                  )}
-                  <span>
-                    {selectedAnswer === questions[currentQuestion].answer
-                      ? "Correct! ✅"
-                      : `Wrong! ❌ The correct answer is ${questions[currentQuestion].answer}`}
-                  </span>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="text-center">
-              <h1 className="text-2xl font-bold mb-4">Quiz Completed! 🎉</h1>
-              <p className="text-xl">Your score: <strong>{score}</strong> / {questions.length}</p>
-              <p className="mt-2">{resultMessage}</p>
-              <button
-                className="mt-5 bg-blue-500 px-4 py-2 rounded-lg text-lg font-medium hover:bg-blue-600"
-                onClick={restartQuiz}
+
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white p-5">
+      <div className="w-full max-w-2xl bg-gray-800 p-6 rounded-xl shadow-lg">
+        {!showResult ? (
+          <>
+            <h1 className="text-2xl font-bold text-center mb-4">
+              Let’s test your IQ! 🤔
+              <br /> How many questions do you think you will answer correctly?
+            </h1>
+            <h2 className="text-xl font-semibold mb-4">{questions[currentQuestion].question}</h2>
+            <div className="flex justify-center mb-4">
+              <CircularProgress
+                variant="determinate"
+                value={(timeLeft / 10) * 100} // Calculate progress percentage
+                size={80}
+                thickness={5}
+                style={{ color: "lightblue" }}
               >
-                Play Again 🔄
-              </button>
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    fontSize: "1.2rem",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {timeLeft}
+                </motion.span>
+              </CircularProgress>
             </div>
-          )}
-          <footer className="mt-6 text-center text-gray-400 text-sm">
-            Powered by <span className="text-blue-400 font-semibold">Nenenj2024</span> - All Rights Reserved
-          </footer>
-        </div>
+            <div className="grid gap-3">
+              {questions[currentQuestion].options.map((option, index) => (
+                <motion.button
+                  key={index}
+                  onClick={() => handleAnswerClick(option)}
+                  disabled={!!selectedAnswer}
+                  className={`p-3 w-full rounded-lg text-lg font-medium transition-all ${selectedAnswer
+                    ? option === questions[currentQuestion].answer
+                      ? "bg-green-600"
+                      : "bg-red-600"
+                    : "bg-blue-500 hover:bg-blue-700"
+                    }`}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {option}
+                </motion.button>
+              ))}
+            </div>
+            {selectedAnswer && (
+              <div className="mt-4 flex items-center gap-2 text-lg">
+                {selectedAnswer === questions[currentQuestion].answer ? (
+                  <FaCheckCircle className="text-green-500" size={24} />
+                ) : (
+                  <FaTimesCircle className="text-red-500" size={24} />
+                )}
+                <span>
+                  {selectedAnswer === questions[currentQuestion].answer
+                    ? "Correct! ✅"
+                    : `Wrong! ❌ The correct answer is ${questions[currentQuestion].answer}`}
+                </span>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Quiz Completed! 🎉</h1>
+            <p className="text-xl">Your score: <strong>{score}</strong> / {questions.length}</p>
+            <p className="mt-2">{resultMessage}</p>
+            <button
+              className="mt-5 bg-blue-500 px-4 py-2 rounded-lg text-lg font-medium hover:bg-blue-600"
+              onClick={restartQuiz}
+            >
+              Play Again 🔄
+            </button>
+          </div>
+        )}
+        <footer className="mt-6 text-center text-gray-400 text-sm">
+          Powered by <span className="text-blue-400 font-semibold">Nenenj2024</span> - All Rights Reserved
+        </footer>
       </div>
-      );
+    </div>
+  );
 };
 
-      export default QuizGame;
+export default QuizGame;
 
