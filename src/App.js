@@ -164,6 +164,9 @@ const QuizGame = () => {
   const [timeLeft, setTimeLeft] = useState(10);
   const [gameStarted, setGameStarted] = useState(false);
 
+  const bgColors = ["bg-blue-200", "bg-green-200", "bg-yellow-200",
+    "bg-purple-200", "bg-pink-200", "bg-red-200"];
+
   const resetTimer = useCallback(() => {
     setTimer(10);
     setTimeLeft(10);
@@ -241,12 +244,12 @@ const QuizGame = () => {
         {!gameStarted ? (
           <div className="text-center">
             <h1 className="text-3x1 font-bold mb-4">
-              <p className="mb-6">
-                Test your IQ with 100 educative questions from different fields and subjects.
-                How far do you think you can go? Are you ready? Let's go Champ!
-              </p>
-
+              Welcome to the Ultimate Quiz Challenge!
             </h1>
+            <p className="mb-6">
+              Test your IQ with 100 educative questions from different fields and subjects.
+              How far do you think you can go? Are you ready? Let's go Champ!
+            </p>
             <button
               className="bg-blue-500 px-6 py-3 rounded-lg text-lg font-medium hover:bg-blue-600"
               onClick={startGame}
@@ -260,7 +263,10 @@ const QuizGame = () => {
               Let’s test your IQ! 🤔
               <br /> How many questions do you think you will answer correctly?
             </h1>
-            <h2 className="text-xl font-semibold mb-4">{questions[currentQuestion].question}</h2>
+            <div clasName={`${bgColors[currentQuestion % bgColors.length]} p-4 rounded-lg mb-4`}>
+              <h2 className="text-xl font-semibold mb-4">{questions[currentQuestion].question}
+              </h2>
+            </div>
             <div className="flex justify-center mb-4">
               <CircularProgress
                 variant="determinate"
