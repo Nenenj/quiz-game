@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Helmet } from 'react-helmet';
 
 
 const questions = [
@@ -136,6 +137,22 @@ const questions = [
   { question: "Which planet is known as the 'Ice Giant'?", options: ["Jupiter", "Saturn", "Uranus", "Mars"], answer: "Uranus" },
   { question: "What is the chemical symbol for aluminum?", options: ["Al", "Am", "Au", "Ag"], answer: "Al" },
   { question: "Which animal is known as the 'Largest Land Animal'?", options: ["Giraffe", "Hippopotamus", "Elephant", "Rhinoceros"], answer: "Elephant" },
+  { question: "If you flip two fair coins, what is the probability of getting at least one head?", options: ["1/4", "1/2", "3/4", "1"], answer: "3/4" },
+  { question: "If a train travels 100 km in 2 hours, what is its average speed?", options: ["25 km/h", "50 km/h", "75 km/h", "100 km/h"], answer: "50 km/h" },
+  { question: "Which number logically follows this series: 2, 4, 8, 16, ...", options: ["18", "20", "32", "64"], answer: "32" },
+  { question: "If all roses are flowers and some flowers fade quickly, can we conclude that some roses fade quickly?", options: ["Yes", "No", "Cannot be determined", "Always"], answer: "Cannot be determined" },
+  { question: "Which is the next number in the sequence: 1, 1, 2, 3, 5, 8, ?", options: ["10", "11", "13", "15"], answer: "13" },
+  { question: "What comes next in the pattern: O, T, T, F, F, S, S, ?", options: ["E", "N", "T", "W"], answer: "E" },
+  { question: "If five cats can catch five mice in five minutes, how many cats are needed to catch 100 mice in 100 minutes?", options: ["5", "10", "20", "100"], answer: "5" },
+  { question: "Which statement is logically equivalent to 'If it rains, then the ground is wet'?", options: ["If the ground is wet, then it rains", "If the ground is not wet, then it does not rain", "It rains if and only if the ground is wet", "The ground is wet only if it rains"], answer: "If the ground is not wet, then it does not rain" },
+  { question: "What is the next letter in the series: A, C, F, J, O, ?", options: ["T", "U", "W", "X"], answer: "U" },
+  { question: "If the day after tomorrow is two days before Thursday, what day is it today?", options: ["Sunday", "Monday", "Tuesday", "Wednesday"], answer: "Sunday" },
+  { question: "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?", options: ["5 minutes", "10 minutes", "50 minutes", "100 minutes"], answer: "5 minutes" },
+  { question: "Which number does not belong in the series: 2, 4, 6, 8, 11, 10?", options: ["2", "4", "11", "10"], answer: "11" },
+  { question: "If a rectangle's length is doubled and its width is tripled, by what factor does its area increase?", options: ["3", "4", "5", "6"], answer: "6" },
+  { question: "What is the missing number in the sequence: 3, 9, 27, ?, 243?", options: ["54", "81", "108", "243"], answer: "81" },
+  { question: "Which of these statements best summarizes the scientific method?", options: ["Observation, Hypothesis, Experiment, Conclusion", "Theory, Fact, Law, Hypothesis", "Observation, Experiment, Conclusion, Belief", "Experiment, Observation, Hypothesis, Conclusion"], answer: "Observation, Hypothesis, Experiment, Conclusion" },
+
 ];
 
 const QuizGame = () => {
@@ -144,24 +161,39 @@ const QuizGame = () => {
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [timer, setTimer] = useState(10);
-  const [timeLeft, setTimeLeft] = useState(timer);
+  const [timeLeft, setTimeLeft] = useState(10);
+  const [gameStarted, setGameStarted] = useState(false);
+
+  const resetTimer = useCallback(() => {
+    setTimer(10);
+    setTimeLeft(10);
+  }, []);
+
+  const handleNextQuestion = useCallback(() => {
+    if (currentQuestion + 1 < questions.length) {
+      setCurrentQuestion(currentQuestion + 1);
+      setSelectedAnswer(null);
+      resetTimer();
+    } else {
+      setShowResult(true);
+    }
+  }, [currentQuestion, resetTimer]);
 
   useEffect(() => {
-    if (timer > 0 && !showResult) {
+    if (gameStarted && timer > 0 && !showResult) {
       const timeout = setTimeout(() => {
         setTimer(timer - 1);
         setTimeLeft(timer - 1);
       }, 1000);
       return () => clearTimeout(timeout);
-    } else if (timer === 0 && !showResult) {
+    } else if (gameStarted && timer === 0 && !showResult) {
       handleNextQuestion();
     }
-  }, [timer, showResult]);
+  }, [timer, showResult, gameStarted, handleNextQuestion]);
 
   useEffect(() => {
     setTimeLeft(timer);
   }, [currentQuestion, timer]);
-
 
   const handleAnswerClick = (option) => {
     if (selectedAnswer) return;
@@ -174,27 +206,19 @@ const QuizGame = () => {
       handleNextQuestion();
     }, 2000);
   };
-  const handleNextQuestion = () => {
-    if (currentQuestion + 1 < questions.length) {
-      if (selectedAnswer === null) {
-        // No answer selected, treat as incorrect (no need to change score)
-      }
-      setCurrentQuestion(currentQuestion + 1);
-      setSelectedAnswer(null);
-      setTimer(10);
-      setTimeLeft(10);
-    } else {
-      setShowResult(true);
-    }
-  };
 
   const restartQuiz = () => {
     setCurrentQuestion(0);
     setSelectedAnswer(null);
     setScore(0);
     setShowResult(false);
-    setTimer(10);
-    setTimeLeft(10);
+    resetTimer();
+    setGameStarted(false);
+  };
+
+  // estlint-disable-next-line no-unused-vars
+  const startGame = () => {
+    setGameStarted(true);
   };
 
   const resultMessage =
@@ -205,8 +229,32 @@ const QuizGame = () => {
   return (
 
     <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white p-5">
+      <Helmet>
+        <title>Quiz Game | Test Your IQ</title>
+        <meta property="og:title" content="Quiz Game | Test Your IQ" />
+        <meta property="og:description" content="Play this fun quiz game and test your IQ. Share with friends on Facebook, WhatsApp, and LinkedIn!" />
+        <meta property="og:image" content="https://via.placeholder.com/1200x630" />
+        <meta property="og:url" content="http://localhost:3000" />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
       <div className="w-full max-w-2xl bg-gray-800 p-6 rounded-xl shadow-lg">
-        {!showResult ? (
+        {!gameStarted ? (
+          <div className="text-center">
+            <h1 className="text-3x1 font-bold mb-4">
+              <p className="mb-6">
+                Test your IQ with 100 educative questions from different fields and subjects.
+                How far do you think you can go? Are you ready? Let's go Champ!
+              </p>
+
+            </h1>
+            <button
+              className="bg-blue-500 px-6 py-3 rounded-lg text-lg font-medium hover:bg-blue-600"
+              onClick={startGame}
+            >
+              Play
+            </button>
+          </div>
+        ) : !showResult ? (
           <>
             <h1 className="text-2xl font-bold text-center mb-4">
               Let’s test your IQ! 🤔
@@ -216,7 +264,7 @@ const QuizGame = () => {
             <div className="flex justify-center mb-4">
               <CircularProgress
                 variant="determinate"
-                value={(timeLeft / 10) * 100} // Calculate progress percentage
+                value={(timeLeft / 10) * 100}
                 size={80}
                 thickness={5}
                 style={{ color: "lightblue" }}
@@ -288,7 +336,7 @@ const QuizGame = () => {
           Powered by <span className="text-blue-400 font-semibold">Nenenj2024</span> - All Rights Reserved
         </footer>
       </div>
-    </div>
+    </div >
   );
 };
 
