@@ -268,7 +268,7 @@ const QuizGame = () => {
               How far do you think you can go? Are you ready? Let's go Champ!
             </p>
             <button
-              className="bg-blue-500 px-6 py-3 rounded-lg text-lg font-medium hover:bg-blue-600"
+              className="bg-gray-500 px-6 py-3 rounded-lg text-lg font-medium hover:bg-blue-600"
               onClick={startGame}
             >
               Play
