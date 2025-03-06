@@ -3,6 +3,9 @@ import { motion } from "framer-motion";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Helmet } from 'react-helmet';
+import ReactGA from "react-ga4";
+
+ReactGA.initialize("G-FPDFW27EW9");
 
 
 const questions = [
@@ -164,8 +167,6 @@ const QuizGame = () => {
   const [timeLeft, setTimeLeft] = useState(10);
   const [gameStarted, setGameStarted] = useState(false);
 
-  const bgColors = ["bg-blue-200", "bg-green-200", "bg-yellow-200",
-    "bg-purple-200", "bg-pink-200", "bg-red-200"];
 
   const resetTimer = useCallback(() => {
     setTimer(10);
@@ -199,13 +200,18 @@ const QuizGame = () => {
   }, [currentQuestion, timer]);
 
   const handleAnswerClick = (option) => {
+    //Function called when a user clicks an answer option.
     if (selectedAnswer) return;
+    if (!questions[currentQuestion]) {
+      console.error("current question index is out of bounds");
+      return;
+    }
 
-    setSelectedAnswer(option);
-    if (option === questions[currentQuestion].answer) {
+    setSelectedAnswer(option); //Set the selected answer.
+    if (option === questions[currentQuestion].answer) { //Check if the answer is correct
       setScore(score + 1);
     }
-    setTimeout(() => {
+    setTimeout(() => { //wait 2 seconds, then move to the next questions.
       handleNextQuestion();
     }, 2000);
   };
@@ -219,9 +225,19 @@ const QuizGame = () => {
     setGameStarted(false);
   };
 
-  // estlint-disable-next-line no-unused-vars
+
   const startGame = () => {
     setGameStarted(true);
+    console.log("Game started by user.");
+    // Track the Play button click using react-ga4
+
+    ReactGA.event({
+      category: "Quiz Game",
+      action: "Play Button Clicked",
+      label: "start_game",
+      value: 1,
+    });
+
   };
 
   const resultMessage =
@@ -243,7 +259,7 @@ const QuizGame = () => {
       <div className="w-full max-w-2xl bg-gray-800 p-6 rounded-xl shadow-lg">
         {!gameStarted ? (
           <div className="text-center">
-            <h1 className="text-3x1 font-bold mb-4">
+            <h1 className="text-3xl font-bold mb-4">
               Welcome to the Ultimate Quiz Challenge!
             </h1>
             <p className="mb-6">
@@ -263,11 +279,11 @@ const QuizGame = () => {
               Let’s test your IQ! 🤔
               <br /> How many questions do you think you will answer correctly?
             </h1>
-            <div clasName={`${bgColors[currentQuestion % bgColors.length]} p-4 rounded-lg mb-4`}>
+            <div className="bg-blue p-4 rounded-lg mb-4">
               <h2 className="text-xl font-semibold mb-4">{questions[currentQuestion].question}
               </h2>
             </div>
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center mb-4" aria-live="polite">
               <CircularProgress
                 variant="determinate"
                 value={(timeLeft / 10) * 100}
@@ -298,6 +314,10 @@ const QuizGame = () => {
                   key={index}
                   onClick={() => handleAnswerClick(option)}
                   disabled={!!selectedAnswer}
+                  aria-disabled={!!selectedAnswer}
+                  aria-label={`Answer option ${index + 1}: ${option}`}
+                  role="radio"
+                  aria-checked={selectedAnswer === option}
                   className={`p-3 w-full rounded-lg text-lg font-medium transition-all ${selectedAnswer
                     ? option === questions[currentQuestion].answer
                       ? "bg-green-600"
@@ -326,7 +346,7 @@ const QuizGame = () => {
             )}
           </>
         ) : (
-          <div className="text-center">
+          <div className="text-center" aria-live="assertive">
             <h1 className="text-2xl font-bold mb-4">Quiz Completed! 🎉</h1>
             <p className="text-xl">Your score: <strong>{score}</strong> / {questions.length}</p>
             <p className="mt-2">{resultMessage}</p>
