@@ -280,7 +280,7 @@ const QuizGame = () => {
               Let’s test your IQ! 🤔
               <br /> How many questions do you think you will answer correctly?
             </h1>
-            <div className="bg-blue-200 p-4 rounded-lg mb-4">
+            <div className="bg-black-200 p-4 rounded-lg mb-4">
               <h2 className="text-xl font-semibold mb-4">{questions[currentQuestion].question}
               </h2>
             </div>
