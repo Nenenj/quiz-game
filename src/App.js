@@ -79,7 +79,7 @@ const questions = [
   { question: "If a train moves at 60 km/h, how far will it travel in 2.5 hours?", options: ["120 km", "150 km", "180 km", "200 km"], answer: "150 km" },
   { question: "What is the antonym of 'benevolent'?", options: ["Malevolent", "Generous", "Kind", "Humble"], answer: "Malevolent" },
   { question: "Which software is used for data analysis and visualization?", options: ["Excel", "PowerPoint", "Photoshop", "Premiere Pro"], answer: "Excel" },
-  { question: "Who is the author of 'Things Fall Apart'?", options: ["Chinua Achebe", "Wole Soyinka", "Ngugi wa Thiong'o", "Cyprian Ekwensi"], answer: "Chinua Achebe" },
+  { question: "Which of these popular Lagos landmarks is known for its historical significance related to the slave trade?", options: ["The National Theatre", "Freedom Park", "Lekki Conservation Centre", "The Cathedral Church of Christ"], answer: "Freedom Park" },
   { question: "What is the sum of the angles in a triangle?", options: ["90°", "120°", "180°", "360°"], answer: "180°" },
   { question: "Which of these is a unit of data storage?", options: ["Byte", "Joule", "Newton", "Kelvin"], answer: "Byte" },
   { question: "What is the currency of Japan?", options: ["Yen", "Won", "Dollar", "Peso"], answer: "Yen" },
@@ -251,9 +251,10 @@ const QuizGame = () => {
       <Helmet>
         <title>Quiz Game | Test Your IQ</title>
         <meta property="og:title" content="Quiz Game | Test Your IQ" />
-        <meta property="og:description" content="Play this fun quiz game and test your IQ. Share with friends on Facebook, WhatsApp, and LinkedIn!" />
-        <meta property="og:image" content="https://via.placeholder.com/1200x630" />
-        <meta property="og:url" content="http://localhost:3000" />
+        <meta property="og:description" content="Challenge yourself with 100 educative questions spanning multiple fields. 
+        Test your IQ and share your score.!" />
+        <meta property="og:image" content="https://imgur.com/a/R00ZvSo" />
+        <meta property="og:url" content="https://fantastic-kheer-0fd999.netlify.app/" />
         <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
       <div className="w-full max-w-2xl bg-gray-800 p-6 rounded-xl shadow-lg">
@@ -279,7 +280,7 @@ const QuizGame = () => {
               Let’s test your IQ! 🤔
               <br /> How many questions do you think you will answer correctly?
             </h1>
-            <div className="bg-blue p-4 rounded-lg mb-4">
+            <div className="bg-blue-200 p-4 rounded-lg mb-4">
               <h2 className="text-xl font-semibold mb-4">{questions[currentQuestion].question}
               </h2>
             </div>
